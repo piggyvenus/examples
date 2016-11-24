@@ -1,18 +1,18 @@
-##Configure Nexus Example:
-1. git clone http://github.com/samueltauil/nexus
-2. oc login -u <your username>
-3. oc new-project <your project name>
-4. oc new-app https://github.com/samueltauil/nexus
-5. oc expose svc nexus
-6. click to the route once the pod is up and running
-8. export NEXUS_BASE_URL=<nexus route hostname> (example: nexus-nexus.cloudapps.example.com)
-9. Run: addjbossrepos.sh 
-10. login to nexus as admin/admin123
-11. Select repositories 
-12. select maven-public repository
-13. select all redhat & jboss repos to the left
-14. save it
-15. Now, you build a test app to use nexus via MAVEN_MIRROR_URL 
-16. Example:
-17. oc new-build openshift/wildfly~https://github.com/openshift/jee-ex.git -e MAVEN_MIRROR_URL=‘http://nexus.nexus.svc.cluster.local:8081/repository/maven-public/'
-(In my example my service name is nexus and project name is nexus)
+## Setting Nexus on OpenShift v3.3.1.3
+
+1. git clone https://github.com/samueltauil/nexus
+2. cd nexus
+3. oc login 
+4. oc new-project nexus
+5. ./provision.sh
+6. Once the nexus is up
+7. Login via route as admin/admin123
+8. export NEXUS_BASE_URL as script addjbossrepos.sh  
+9. run ./addjbossrepos.sh
+10. Refresh Nexus control 
+11. click on the engine icon at the top
+12. select repositories 
+13. select the maven-public repositoryand go to maven_public repo
+11. move all jboss and redhat repos to left
+12. save
+13. Start building with MAVEN_MIRROR_URL with the service DNS name; i.e. http://<nexus_service_name>.<project_name>.svc.cluster.local:8081/repository/maven-public/
