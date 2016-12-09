@@ -9,3 +9,4 @@
 8.   Wait until your application is build and deploy, right click on the pod under OpenShift Explorer
 9.   goto port forward and start all the ports
 10.  add OpenShift under server tab under debug prospect
+https://developers.redhat.com/blog/2016/08/26/using-red-hat-jboss-developer-studio-to-debug-java-applications-in-the-red-hat-container-development-kit/

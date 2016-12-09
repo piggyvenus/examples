@@ -1,4 +1,5 @@
 Deploying springboot app with jar
+
 Option #1: Build from Dockerfile from git repo:
 
 1. oc new-app https://github.com/piggyvenus/osdemo.git
