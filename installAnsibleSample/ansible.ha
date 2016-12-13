@@ -55,7 +55,7 @@ openshift_hosted_metrics_deploy=true
 # Defaults to https://hawkular-metrics.{{openshift_master_default_subdomain}}/hawkular/metrics
 # Currently, you may only alter the hostname portion of the url, alterting the
 # `/hawkular/metrics` path will break installation of metrics.
-openshift_hosted_metrics_public_url=https://hawkular-metrics.???.csx.com/hawkular/metrics
+openshift_hosted_metrics_public_url=https://hawkular-metrics.cloudapps.example.com/hawkular/metrics
 
 
 # Option B - External NFS Host
