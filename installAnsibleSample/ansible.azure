@@ -1,0 +1,80 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+nfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+#ansible_ssh_user=root
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=don
+
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+ansible_become=yes
+
+# To deploy origin, change deployment_type to origin
+deployment_type=openshift-enterprise
+
+openshift_master_default_subdomain=apps.westpoc.openshift.online
+osm_default_node_selector="region=primary"
+openshift_hosted_router_selector='region=infra,zone=router'
+openshift_registry_selector='zone=registry’
+openshift_master_api_port=443
+openshift_master_console_port=443
+
+openshift_hosted_registry_storage_nfs_directory=/exports
+
+
+
+#Metrics stuff
+openshift_hosted_metrics_deploy=true
+# Override metricsPublicURL in the master config for cluster metrics
+# Defaults to https://hawkular-metrics.{{openshift_master_default_subdomain}}/hawkular/metrics
+# Currently, you may only alter the hostname portion of the url, alterting the
+# `/hawkular/metrics` path will break installation of metrics.
+openshift_hosted_metrics_public_url=https://hawkular-metrics.apps.westpoc.openshift.com/hawkular/metrics
+
+
+# An NFS volume will be created with path "nfs_directory/volume_name"
+# on the host within the [nfs] host group.  For example, the volume
+# path using these options would be "/exports/metrics"
+openshift_hosted_metrics_storage_kind=nfs
+openshift_hosted_metrics_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_metrics_storage_nfs_directory=/exports
+openshift_hosted_metrics_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_metrics_storage_volume_name=metrics
+openshift_hosted_metrics_storage_volume_size=100Gi
+
+# Registry Storage Options
+# NFS Host Group
+# An NFS volume will be created with path "nfs_directory/volume_name"
+# on the host within the [nfs] host group.  For example, the volume
+# path using these options would be "/exports/registry"
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=20Gi
+
+
+# enable htpasswd authentication
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
+
+# host group for masters
+[masters]
+10.0.0.5
+
+[nfs]
+10.0.0.5
+
+# host group for nodes, includes region info
+[nodes]
+10.0.0.5 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_scheduleable=false openshift_public_hostname=master.devday.ocpcloud.com
+10.0.0.6 openshift_node_labels="{'region': 'infra', 'zone': 'router'}" openshift_schedulable=True
+10.0.0.7 openshift_node_labels="{'region': 'infra', 'zone': 'router’,'zone': ‘registry’}” openshift_schedulable=True
+10.0.0.8 openshift_node_labels="{'region': 'primary', 'zone': 'east'}" 
+10.0.0.9 openshift_node_labels="{'region': 'primary', 'zone': 'west'}" 
+10.0.0.10 openshift_node_labels="{'region': 'primary', 'zone': ‘north’}”
+10.0.0.11 openshift_node_labels="{'region': 'primary', 'zone': ‘south’}”

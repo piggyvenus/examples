@@ -1,0 +1,74 @@
+# Create an OSEv3 group that contains the master, nodes, etcd, and lb groups.
+# The lb group lets Ansible configure HAProxy as the load balancing solution.
+# Comment lb out if your load balancer is pre-configured.
+[OSEv3:children]
+masters
+nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+#ansible_ssh_user=root
+deployment_type=openshift-enterprise
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=ec2-user
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+#ansible_sudo=true
+ansible_become=yes
+
+# Cloud Provider Configuration
+#
+# Note: You may make use of environment variables rather than store
+# sensitive configuration within the ansible inventory.
+# For example:
+#openshift_cloudprovider_aws_access_key="{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+#openshift_cloudprovider_aws_secret_key="{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
+#
+# AWS
+openshift_cloudprovider_kind=aws
+openshift_cloudprovider_aws_access_key=<your_aws_key>
+openshift_cloudprovider_aws_secret_key=<your_aws_secret>
+
+osm_default_subdomain=apps.poc.osewag.com
+osm_default_node_selector='region=primary'
+openshift_hosted_router_selector='region=infra'
+openshift_registry_selector='region=infra'
+
+# Uncomment the following to enable htpasswd authentication; defaults to
+# DenyAllPasswordIdentityProvider.
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+#Metrics stuff
+openshift_hosted_metrics_deploy=true
+openshift_hosted_metrics_public_url=https://hawkular-metrics.apps.ocppoc.openshift.online/hawkular/metrics
+openshift_hosted_metrics_storage_kind=dynamic
+
+# S3 bucket must already exist.
+openshift_hosted_registry_storage_kind=object
+openshift_hosted_registry_storage_provider=s3
+openshift_hosted_registry_storage_s3_accesskey=AKIAIOPAVZDEPKJM727A
+openshift_hosted_registry_storage_s3_secretkey=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
+openshift_hosted_registry_storage_s3_bucket=ocppoc
+openshift_hosted_registry_storage_s3_region=Oregon
+openshift_hosted_registry_storage_s3_chunksize=26214400
+openshift_hosted_registry_storage_s3_rootdirectory=/registry
+openshift_hosted_registry_pullthrough=true
+openshift_hosted_registry_acceptschema2=true
+openshift_hosted_registry_enforcequota=true
+
+
+openshift_hosted_logging_deploy=true
+openshift_hosted_logging_storage_kind=dynamic
+openshift_master_logging_public_url=https://kibana.apps.ocppoc.openshift.online
+openshift_hosted_logging_elasticsearch_cluster_size=1
+openshift_hosted_logging_hostname=kibana.apps.ocppoc.openshift.online
+
+# host group for masters
+[masters]
+ip-172-31-8-219.us-west-2.compute.internal
+
+# host group for nodes, includes region info
+[nodes]
+ip-172-31-8-219.us-west-2.compute.internal openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=True openshift_public_hostname=master.ocppoc.openshift.online
+ip-172-31-11-236.us-west-2.compute.internal openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+
+
