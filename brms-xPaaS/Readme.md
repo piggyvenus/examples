@@ -18,3 +18,6 @@ oc new-app --template=decisionserver63-basic-s2i -p APPLICATION_NAME=“cvshealt
  		 <artifactId>CVSHealthCare</artifactId>
  		 <version>1.1</version>
 	6.Example of pom.xml: https://github.com/paulrajjey/cvshealth/blob/master/pom.xml
+
+Ref: https://developers.redhat.com/blog/2016/10/05/micro-rules-on-openshift-the-coolstore-just-became-even-cooler/
+
