@@ -1,0 +1,2 @@
+auditConfig:
+  enabled: true

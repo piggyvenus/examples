@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-scaler
+  namespace: demo
+  selfLink: /apis/extensions/v1beta1/namespaces/demo/horizontalpodautoscalers/frontend-scaler
+spec:
+  cpuUtilization:
+    targetPercentage: 5
+  maxReplicas: 5
+  minReplicas: 1
+  scaleRef:
+    apiVersion: v1
+    kind: DeploymentConfig
+    name: welcome-php
+    subresource: scale
