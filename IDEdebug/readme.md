@@ -1,3 +1,7 @@
+## Starting OCP locally via
+oc cluster up --image=registry.access.redhat.com/openshift3/ose --version=v3.4.0.40
+
+
 ## Configure IDB to enable debug for JAVA
 1. Install JBoss Tool plug
 2. Install Red Hat JBoss Developer Studio
