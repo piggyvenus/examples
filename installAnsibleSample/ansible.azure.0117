@@ -16,7 +16,7 @@ ansible_ssh_user=root
 # To deploy origin, change deployment_type to origin
 deployment_type=openshift-enterprise
 
-openshift_master_default_subdomain=poc.cvs.openshift.online
+openshift_master_default_subdomain=poc.xxx.openshift.online
 osm_default_node_selector='region=primary'
 openshift_hosted_router_selector='zone=router'
 openshift_registry_selector='zone=router'
@@ -33,7 +33,7 @@ openshift_hosted_metrics_deploy=true
 # Defaults to https://hawkular-metrics.{{openshift_master_default_subdomain}}/hawkular/metrics
 # Currently, you may only alter the hostname portion of the url, alterting the
 # `/hawkular/metrics` path will break installation of metrics.
-openshift_hosted_metrics_public_url=https://hawkular-metrics.poc.cvs.openshift.online/hawkular/metrics
+openshift_hosted_metrics_public_url=https://hawkular-metrics.poc.xxx.openshift.online/hawkular/metrics
 
 
 # An NFS volume will be created with path "nfs_directory/volume_name"
@@ -64,16 +64,16 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 
 # host group for masters
 [masters]
-cvsmaster.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.5 openshift_public_ip=13.91.54.12 openshift_public_hostname=ocpmaster.poc.cvs.openshift.online
+master.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.5 openshift_public_ip=13.91.54.12 openshift_public_hostname=ocpmaster.poc.xxx.openshift.online
 
 [nfs]
-cvsmaster.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.5
+master.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.5
 
 # host group for nodes, includes region info
 [nodes]
-cvsmaster.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.5 openshift_public_ip=13.91.54.12 openshift_public_hostname=ocpmaster.poc.cvs.openshift.online openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_scheduleable=false
-cvsinode1.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.6 openshift_node_labels="{'region': 'infra', 'zone': 'router'}" openshift_schedulable=True
-cvsnode1.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.7 openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
-cvsnode2.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.8 openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
-cvsnode3.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.9 openshift_node_labels="{'region': 'primary', 'zone': 'north'}"
+master.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.5 openshift_public_ip=13.91.54.12 openshift_public_hostname=ocpmaster.poc.xxx.openshift.online openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_scheduleable=false
+inode1.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.6 openshift_node_labels="{'region': 'infra', 'zone': 'router'}" openshift_schedulable=True
+node1.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.7 openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+node2.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.8 openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+node3.cmnstolpls0elbiscdzliaqcqf.dx.internal.cloudapp.net openshift_ip=10.0.0.9 openshift_node_labels="{'region': 'primary', 'zone': 'north'}"
 

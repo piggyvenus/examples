@@ -89,22 +89,22 @@ openshift_hosted_metrics_public_url=https://hawkular-metrics.cloudapps.example.c
 
 # host group for masters
 [masters]
-lnx30090.example.com
-lnx30091.example.com
-lnx30092.example.com
+master1.example.com
+master2.example.com
+master3.example.com
 
 # etcd group for masters
 [etcd]
-lnx30090.example.com
-lnx30091.example.com
-lnx30092.example.com
+master1.example.com
+master2.example.com
+master3.example.com
 
 # host group for nodes, includes region info
 [nodes]
-lnx30090.example.com openshift_node_labels="{'region': 'masters', 'zone': 'default'}"
-lnx30091.example.com openshift_node_labels="{'region': 'masters', 'zone': 'default'}"
-lnx30092.example.com openshift_node_labels="{'region': 'masters', 'zone': 'default'}"
-lnx30093.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-lnx30094.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-lnx30095.example.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
-lnx30096.example.com openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+master1.example.com openshift_node_labels="{'region': 'masters', 'zone': 'default'}"
+master2.example.com openshift_node_labels="{'region': 'masters', 'zone': 'default'}"
+master3.example.com openshift_node_labels="{'region': 'masters', 'zone': 'default'}"
+infra1.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+infra2.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+node1.example.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+node2.example.com openshift_node_labels="{'region': 'primary', 'zone': 'west'}"

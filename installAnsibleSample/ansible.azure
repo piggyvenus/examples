@@ -16,7 +16,7 @@ ansible_become=yes
 # To deploy origin, change deployment_type to origin
 deployment_type=openshift-enterprise
 
-openshift_master_default_subdomain=apps.westpoc.openshift.online
+openshift_master_default_subdomain=apps.poc.openshift.online
 osm_default_node_selector="region=primary"
 openshift_hosted_router_selector='region=infra,zone=router'
 openshift_registry_selector='zone=registry’
@@ -33,7 +33,7 @@ openshift_hosted_metrics_deploy=true
 # Defaults to https://hawkular-metrics.{{openshift_master_default_subdomain}}/hawkular/metrics
 # Currently, you may only alter the hostname portion of the url, alterting the
 # `/hawkular/metrics` path will break installation of metrics.
-openshift_hosted_metrics_public_url=https://hawkular-metrics.apps.westpoc.openshift.com/hawkular/metrics
+openshift_hosted_metrics_public_url=https://hawkular-metrics.apps.poc.openshift.com/hawkular/metrics
 
 
 # An NFS volume will be created with path "nfs_directory/volume_name"
