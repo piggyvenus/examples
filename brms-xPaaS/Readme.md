@@ -1,7 +1,7 @@
 **command for S2I to build**
 
 ```
-oc new-app --template=decisionserver63-basic-s2i -p APPLICATION_NAME=“cvshealthcarerules",KIE_SERVER_USER="brms",KIE_SERVER_PASSWORD="Password@123",SOURCE_REPOSITORY_URL="https://gitw.cvshealth.com/Santosh.Srivastava/cvs_brms.git",SOURCE_REPOSITORY_REF=master,KIE_CONTAINER_DEPLOYMENT=“CVSHealthCareRulesContainer=CVSHealthCarePoC:CVSHealthCare:1.0",CONTEXT_DIR=“CVSHealthCare”
+oc new-app --template=decisionserver63-basic-s2i -p APPLICATION_NAME=“healthcarerules",KIE_SERVER_USER="brms",KIE_SERVER_PASSWORD="Password@123",SOURCE_REPOSITORY_URL="https://gitw.health.com/Santosh.Srivastava/brms.git",SOURCE_REPOSITORY_REF=master,KIE_CONTAINER_DEPLOYMENT=“HealthCareRulesContainer=HealthCarePoC:HealthCare:1.0",CONTEXT_DIR=“HealthCare”
 ```
 
 
@@ -12,12 +12,12 @@ oc new-app --template=decisionserver63-basic-s2i -p APPLICATION_NAME=“cvshealt
 	3. no project.repositories file
 	4. pom.xml points to nexus instead of local maven.
 	5. KIE_CONTAINER_DEPLOYMENT must match what is in pom.xml
-		Value Example: CVSHealthCareRulesContainer=CVSHealthCarePoC:CVSHealthCare:1.1
+		Value Example: HealthCareRulesContainer=HealthCarePoC:HealthCare:1.1
 	   and pom.xml is: 
-		 <groupId>CVSHealthCarePoC</groupId>
- 		 <artifactId>CVSHealthCare</artifactId>
+		 <groupId>HealthCarePoC</groupId>
+ 		 <artifactId>HealthCare</artifactId>
  		 <version>1.1</version>
-	6.Example of pom.xml: https://github.com/paulrajjey/cvshealth/blob/master/pom.xml
+	6.Example of pom.xml: https://github.com/paulrajjey/health/blob/master/pom.xml
 
 Ref: https://developers.redhat.com/blog/2016/10/05/micro-rules-on-openshift-the-coolstore-just-became-even-cooler/
 
