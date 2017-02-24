@@ -4,8 +4,8 @@ oc cluster up --metric --logging
 
 
 ## Configure IDB to enable debug for JAVA
-1. Install JBoss Tool plug-in
-2. Install Red Hat JBoss Developer Studio
+1. Install Red Hat JBoss Developer Studio or Eclipse
+2. Install JBoss Tool plug-in if using Eclipse
 3. Create OpenShift conection under OpenShift Explorer
 4. Deploy application 
 template: 
