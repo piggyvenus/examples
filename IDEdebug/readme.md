@@ -9,18 +9,21 @@ oc cluster up --metric --logging
 3. Create OpenShift conection under OpenShift Explorer
 4. Deploy application 
 template: 
-* oc create -f eap64-basic-s2i.json
-* oc create -f jboss-image-streams.json
-* APPLICATION_NAME: ticket-monster
-* CONTEXT_DIR: demo
-* SOURCE_REPOSITORY_URL: https://github.com/jboss-developer/ticket-monster.git
-* SOURCE_REPOSITORY_REF: 2.7.0.Final
+   - oc create -f eap64-basic-s2i.json
+   - oc create -f jboss-image-streams.json
+   - APPLICATION_NAME: ticket-monster
+   - CONTEXT_DIR: demo
+   - SOURCE_REPOSITORY_URL: https://github.com/jboss-developer/ticket-monster.git
+   - SOURCE_REPOSITORY_REF: 2.7.0.Final
 5. Make sure add 8787 as debug port in DC before the pod was deployed
 
- '''             name: debug
+
+ ```             
+            - name: debug
               containerPort: 8787
               protocol: TCP
- '''
+ ```
+ 
 6. Right click on the Deployment Config --> goto Manage Environment variables --> add DEBUG = true and DEBUG_PORT = 8787
 7.   Wait until your application is build and deploy, right click on the pod under OpenShift Explorer
 8.   goto port forward and start all the ports
