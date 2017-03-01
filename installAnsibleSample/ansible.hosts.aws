@@ -28,7 +28,7 @@ openshift_cloudprovider_kind=aws
 openshift_cloudprovider_aws_access_key=<your_aws_key>
 openshift_cloudprovider_aws_secret_key=<your_aws_secret>
 
-osm_default_subdomain=apps.poc.osewag.com
+openshift_master_default_subdomain=apps.poc.osewag.com
 osm_default_node_selector='region=primary'
 openshift_hosted_router_selector='region=infra'
 openshift_registry_selector='region=infra'

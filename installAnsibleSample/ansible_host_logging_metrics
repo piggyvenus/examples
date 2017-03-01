@@ -15,7 +15,7 @@ deployment_type=openshift-enterprise
 # If ansible_ssh_user is not root, ansible_sudo must be set to true
 #ansible_become=yes
 
-osm_default_subdomain=cloudapps.example.com
+openshift_master_default_subdomain=cloudapps.example.com
 osm_default_node_selector='region=primary'
 openshift_hosted_router_selector='region=infra'
 openshift_registry_selector='region=infra'
