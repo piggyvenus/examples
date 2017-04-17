@@ -1,6 +1,6 @@
 1) update rpm
 subscription-manager unsubscribe --all
-subscription-manager attach --pool=8a85f98144844aff014488d059f61625
+subscription-manager attach --pool=<pool id>
 subscription-manager repos --disable="*"
 subscription-manager repos     --enable="rhel-7-server-rpms"     --enable="rhel-7-server-extras-rpms"     --enable="rhel-7-server-ose-3.5-rpms"     --enable="rhel-7-fast-datapath-rpms"
 yum clean all
