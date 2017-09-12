@@ -1,0 +1,135 @@
+# Create an OSEv3 group that contains the master, nodes, etcd, and lb groups.
+# The lb group lets Ansible configure HAProxy as the load balancing solution.
+# Comment lb out if your load balancer is pre-configured.
+[OSEv3:children]
+masters
+nodes
+nfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+ansible_ssh_user=root
+deployment_type=openshift-enterprise
+# SSH user, this user should allow ssh based auth without requiring a password
+#ansible_ssh_user=cloud-user
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+#ansible_become=yes
+
+openshift_clock_enabled=true
+openshift_master_default_subdomain=cloudapps.example.com
+# Disabling for smaller instances used for Demo purposes. Use instances with minimum disk and memory sizes required by OpenShift
+openshift_disable_check=disk_availability,memory_availability
+
+openshift_hosted_router_selector='region=infra'
+openshift_registry_selector='region=infra'
+
+# Global Proxy Configuration
+# These options configure HTTP_PROXY, HTTPS_PROXY, and NOPROXY environment
+# variables for docker and master services.
+#openshift_http_proxy=http://USER:PASSWORD@IPADDR:PORT
+#openshift_https_proxy=https://USER:PASSWORD@IPADDR:PORT
+#openshift_no_proxy='.cx.internal.cloudapp.net'
+
+# These options configure the BuildDefaults admission controller which injects
+# environment variables into Builds. These values will default to their
+# corresponding values above but you may set them independently. See BuildDefaults
+# documentation at https://docs.openshift.org/latest/admin_guide/build_defaults_overrides.html
+#openshift_builddefaults_http_proxy=openshift_http_proxy
+#openshift_builddefaults_https_proxy=openshift_https_proxy
+#openshift_builddefaults_no_proxy=openshift_noproxy
+#openshift_builddefaults_git_http_proxy=openshift_builddefaults_http_proxy
+#openshift_builddefaults_git_https_proxy=openshift_builddefaults_https_proxy
+
+
+# Uncomment the following to enable htpasswd authentication; defaults to
+# DenyAllPasswordIdentityProvider.
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+#172.30.0.0/16 default
+#openshift_portal_net=172.30.0.0/16
+#default 10.1.0.0/16
+#osm_cluster_network_cidr=172.29.0.0/16
+
+openshift_install_examples=true
+
+#Metrics stuff
+openshift_hosted_metrics_deploy=true
+# Override metricsPublicURL in the master config for cluster metrics
+# Defaults to https://hawkular-metrics.{{openshift_master_default_subdomain}}/hawkular/metrics
+# Currently, you may only alter the hostname portion of the url, alterting the
+# `/hawkular/metrics` path will break installation of metrics.
+openshift_hosted_metrics_public_url=https://hawkular-metrics.cloudapps.example.com/hawkular/metrics
+
+
+# An NFS volume will be created with path "nfs_directory/volume_name"
+# on the host within the [nfs] host group.  For example, the volume
+# path using these options would be "/exports/metrics"
+openshift_hosted_metrics_storage_kind=nfs
+openshift_hosted_metrics_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_metrics_storage_nfs_directory=/exports
+openshift_hosted_metrics_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_metrics_storage_volume_name=metrics
+openshift_hosted_metrics_storage_volume_size=10Gi
+openshift_hosted_metrics_storage_labels={'storage': 'metrics'}
+
+# Option B - External NFS Host
+# NFS volume must already exist with path "nfs_directory/_volume_name" on
+# the storage_host. For example, the remote volume path using these
+# options would be "nfs.example.com:/exports/metrics"
+#openshift_hosted_metrics_storage_kind=nfs
+#openshift_hosted_metrics_storage_access_modes=['ReadWriteOnce']
+#openshift_hosted_metrics_storage_host=nfsserver
+#openshift_hosted_metrics_storage_nfs_directory=/exports
+#openshift_hosted_metrics_storage_volume_name=metrics
+#openshift_hosted_metrics_storage_volume_size=5Gi
+
+
+# Registry Storage Options
+# NFS Host Group
+# An NFS volume will be created with path "nfs_directory/volume_name"
+
+
+# Registry Storage Options
+# NFS Host Group
+# An NFS volume will be created with path "nfs_directory/volume_name"
+# on the host within the [nfs] host group.  For example, the volume
+# path using these options would be "/exports/registry"
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=20Gi
+
+
+openshift_hosted_logging_deploy=true
+# Logging storage config
+# Option A - NFS Host Group
+# An NFS volume will be created with path "nfs_directory/volume_name"
+# on the host within the [nfs] host group.  For example, the volume
+# path using these options would be "/exports/logging"
+openshift_hosted_logging_storage_kind=nfs
+openshift_hosted_logging_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_logging_storage_nfs_directory=/exports
+openshift_hosted_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_logging_storage_volume_name=logging
+openshift_hosted_logging_storage_volume_size=20Gi
+openshift_hosted_logging_storage_labels={'storage': 'logging'}
+
+openshift_master_logging_public_url=https://kibana.cloudapps.example.com
+# Configure the number of elastic search nodes, unless you're using dynamic provisioning
+# this value must be 1
+openshift_hosted_logging_elasticsearch_cluster_size=1
+openshift_hosted_logging_hostname=kibana.cloudapps.example.com
+
+# host group for masters
+[masters]
+n33.example.com
+
+# host group for nodes, includes region info
+[nodes]
+n33.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=True
+n34.example.com openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+
+[nfs]
+n33.example.com
