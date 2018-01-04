@@ -1,0 +1,110 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+nfs
+#glusterfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+#ansible_sudo=true
+#ansible_become=yes
+
+# To deploy origin, change deployment_type to origin
+deployment_type=openshift-enterprise
+
+openshift_clock_enabled=true
+
+#os_sdn_network_plugin_name=redhat/openshift-ovs-multitenant
+os_sdn_network_plugin_name=redhat/openshift-ovs-networkpolicy
+
+# Disabling for smaller instances used for Demo purposes. Use instances with minimum disk and memory sizes required by OpenShift
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability,docker_storage
+
+openshift_master_default_subdomain=testapps.sc.osecloud.com
+#osm_default_node_selector="region=primary"
+openshift_hosted_router_selector='region=infra'
+openshift_registry_selector='region=infra'
+
+## The two parameters below would be used if you want API Server and Master running on 443 instead of 8443. 
+## In this cluster 443 is used by router, so we cannot use 443 for master
+#openshift_master_api_port=443
+#openshift_master_console_port=443
+
+
+openshift_hosted_registry_storage_nfs_directory=/exports
+
+
+# Enable cluster metrics
+openshift_metrics_install_metrics=true
+openshift_metrics_storage_kind=nfs
+openshift_metrics_storage_access_modes=['ReadWriteOnce']
+openshift_metrics_storage_nfs_directory=/exports
+openshift_metrics_storage_nfs_options='*(rw,root_squash)'
+openshift_metrics_storage_volume_name=metrics
+openshift_metrics_storage_volume_size=50Gi
+openshift_metrics_storage_labels={'storage': 'metrics'}
+
+
+
+
+# Logging
+openshift_logging_install_logging=true
+openshift_logging_storage_kind=nfs
+openshift_logging_storage_access_modes=['ReadWriteOnce']
+openshift_logging_storage_nfs_directory=/exports
+openshift_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_logging_storage_volume_name=logging-es
+openshift_logging_storage_volume_size=10Gi
+openshift_logging_storage_labels={'storage': 'logging'}
+openshift_logging_es_cluster_size=1
+openshift_logging_es_memory_limit=2Gi
+
+
+# Registry
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=20Gi
+
+# enable htpasswd authentication
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
+
+openshift_master_overwrite_named_certificates=true
+#need to update key and cert files
+#openshift_master_named_certificates=[{"certfile": "/root/ocp_certs/testopenshift.sc.osecloud.com.crt", "keyfile": "/root/ocp_certs/testopenshift.sc.osecloud.com.key", "names": ["testopenshift.sc.osecloud.com"]}]
+
+#Cloudforms
+#openshift_management_install_management=true
+
+#glusterfs
+#openshift_storage_glusterfs_namespace=glusterfs
+#openshift_storage_glusterfs_name=storage
+
+# host group for masters
+[masters]
+10.0.0.180
+
+[nfs]
+10.0.0.180
+
+[etcd]
+10.0.0.180
+
+# host group for nodes, includes region info
+[nodes]
+10.0.0.180 openshift_hostname=10.0.0.180 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_scheduleable=true openshift_public_hostname=testopenshift.sc.osecloud.com
+10.0.0.81 openshift_hostname=10.0.0.81 openshift_node_labels="{'region': 'primary', 'zone': 'east'}" 
+10.0.0.197 openshift_hostname=10.0.0.197 openshift_node_labels="{'region': 'primary', 'zone': 'west'}" 
+10.0.0.90 openshift_hostname=10.0.0.90 openshift_node_labels="{'region': 'primary', 'zone': 'central'}" 
+
+[glusterfs]
+#10.0.0.81 glusterfs_ip=10.0.0.81 glusterfs_zone=1 glusterfs_devices='[ "/dev/xvdf" ]'
+#10.0.0.197 glusterfs=10.0.0.197 glusterfs_zone=2 glusterfs_devices='[ "/dev/xvdf" ]' 
+#10.0.0.90 glusterfs=10.0.0.90 glusterfs_zone=3 glusterfs_devices='[ "/dev/xvdf" ]' 
