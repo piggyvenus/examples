@@ -1,0 +1,27 @@
+---
+- hosts: nodes
+  remote_user: root
+  #become: True
+  #become_method: sudo
+  vars:
+    docker_storage_mount: /dev/xvdb
+
+  tasks:
+  - name: Stop Docker
+    command: systemctl stop docker
+
+  - name: Clean Docker Data
+    command: rm -rf /var/lib/docker/*
+
+  - name: Create Docker Storage Config
+    blockinfile:
+      dest: /etc/sysconfig/docker-storage-setup
+      create: yes
+      content: |
+        DEVS={{ docker_storage_mount}}
+
+  - name: Docker Storage Setup
+    command: docker-storage-setup
+
+  - name: Start Docker
+    command: systemctl start docker

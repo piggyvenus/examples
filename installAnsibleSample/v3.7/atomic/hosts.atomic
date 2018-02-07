@@ -1,0 +1,93 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+#glusterfs
+#new_nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+#ansible_sudo=true
+#ansible_become=yes
+debug_level=8
+# To deploy origin, change deployment_type to origin
+deployment_type=openshift-enterprise
+openshift_release=v3.7.23
+openshift_image_tag=v3.7.23
+openshift_pkg_version=-3.7.23
+openshift_clock_enabled=true
+containerized=true
+openshift_clusterid=scocpcluster
+#openshift_cloudprovider_aws_cluster_id=scocpcluster
+openshift_template_service_broker_namespaces=['openshift']
+#Enable service catalog
+openshift_enable_service_catalog=true
+# Enable template service broker (requires service catalog to be enabled, above)
+template_service_broker_install=true
+# Disabling for smaller instances used for Demo purposes. Use instances with minimum disk and memory sizes required by OpenShift
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability,docker_storage
+
+openshift_master_default_subdomain=apps.sc.osecloud.com
+#osm_default_node_selector="region=primary"
+#openshift_hosted_router_selector='region=infra'
+#openshift_registry_selector='region=infra'
+
+# AWS
+openshift_cloudprovider_kind=aws
+# Note: IAM profiles may be used instead of storing API credentials on disk.
+openshift_cloudprovider_aws_access_key=<<>>
+openshift_cloudprovider_aws_secret_key=<<>>
+
+#metrics
+#openshift_metrics_install_metrics=true
+#openshift_metrics_hawkular_hostname=hawkular-metrics.apps.sc.osecloud.com
+#openshift_metrics_cassandra_storage_type=dynamic
+#openshift_metrics_image_version=v3.7.23
+
+
+#logging
+#openshift_logging_install_logging=true
+#openshift_logging_namespace=logging
+#openshift_logging_storage_kind=dynamic
+#openshift_logging_image_version=v3.7.23
+#openshift_logging_es_pvc_storage_class_name=gp2
+#openshift_logging_es_pvc_size=20Gi
+#openshift_logging_es_cluster_size=1
+#openshift_logging_es_memory_limit=512Mi
+#openshift_logging_storage_labels={'storage': 'logging'}
+
+
+# enable htpasswd authentication
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
+# Allow all auth
+openshift_master_identity_providers=[{'name': 'allow_all', 'login': 'true', 'challenge': 'true', 'kind': 'AllowAllPasswordIdentityProvider'}]
+
+#glusterfs
+#openshift_storage_glusterfs_namespace=glusterfs
+#openshift_storage_glusterfs_name=storage
+
+
+# host group for masters
+[masters]
+ip-10-0-0-179.us-west-2.compute.internal
+
+[etcd]
+ip-10-0-0-179.us-west-2.compute.internal
+
+# host group for nodes, includes region info
+[nodes]
+ip-10-0-0-179.us-west-2.compute.internal openshift_clusterid=scocpcluster openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_scheduleable=true openshift_public_hostname=ocpmaster.sc.osecloud.com containerized=true
+ip-10-0-0-22.us-west-2.compute.internal openshift_clusterid=scocpcluster openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
+ip-10-0-0-19.us-west-2.compute.internal openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
+ip-10-0-0-97.us-west-2.compute.internal openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
+
+
+#[glusterfs]
+#ip-10-0-0-22.us-west-2.compute.internal glusterfs_ip=10.0.0.22 glusterfs_zone=1 glusterfs_devices='[ "/dev/xvdf" ]'
+#ip-10-0-0-19.us-west-2.compute.internal glusterfs_ip=10.0.0.19 glusterfs_zone=2 glusterfs_devices='[ "/dev/xvdf" ]'
+#ip-10-0-0-97.us-west-2.compute.internal glusterfs_ip=10.0.0.97 glusterfs_zone=3 glusterfs_devices='[ "/dev/xvdf" ]'
