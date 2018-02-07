@@ -74,17 +74,17 @@ openshift_master_identity_providers=[{'name': 'allow_all', 'login': 'true', 'cha
 
 # host group for masters
 [masters]
-ip-10-0-0-179.us-west-2.compute.internal
+ocpm1.4453apps.net
 
 [etcd]
-ip-10-0-0-179.us-west-2.compute.internal
+ocpm1.4453apps.net
 
 # host group for nodes, includes region info
 [nodes]
-ip-10-0-0-179.us-west-2.compute.internal openshift_clusterid=scocpcluster openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_scheduleable=true openshift_public_hostname=ocpmaster.sc.osecloud.com containerized=true
-ip-10-0-0-22.us-west-2.compute.internal openshift_clusterid=scocpcluster openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
-ip-10-0-0-19.us-west-2.compute.internal openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
-ip-10-0-0-97.us-west-2.compute.internal openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
+ocpm1.4453apps.net openshift_clusterid=aigocp openshift_hostname=ocpm1.4453apps.net openshift_ip=10.15.228.230 openshift_public_ip=10.15.228.230 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_scheduleable=true openshift_public_hostname=master.4453apps.net containerized=true
+ocpnode1.4453apps.net openshift_clusterid=aigocp openshift_hostname=ocpnode1.4453apps.net openshift_ip=10.15.228.234 openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
+ocpnode1.4453apps.net openshift_clusterid=aigocp openshift_hostname=ocpnode2.4453apps.net openshift_ip=10.15.228.241 openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
+
 
 
 #[glusterfs]
