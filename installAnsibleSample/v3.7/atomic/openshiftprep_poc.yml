@@ -18,7 +18,7 @@
     ignore_errors: true
 
   - name: register node with subscription-manager
-    redhat_subscription: state=present activationkey=openshift-chrisl-poc org_id=6392856 autosubscribe=false
+    redhat_subscription: state=present activationkey=openshift-chrisl-poc org=6392856 autosubscribe=false
     register: task_result
     until: task_result | succeeded
     retries: 10
