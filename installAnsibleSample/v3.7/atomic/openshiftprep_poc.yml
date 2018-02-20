@@ -7,10 +7,6 @@
     docker_storage_mount: /dev/xvdb
 
   vars_prompt:
-    - name: "rhn_user_name"
-      prompt: "RHN UserName ?"
-    - name: "rhn_password"
-      prompt: "RHN Password ?"
     - name: "rhel_pool_id"
       prompt: "RHN POOL ID ?"
 
@@ -22,7 +18,7 @@
     ignore_errors: true
 
   - name: register node with subscription-manager
-    redhat_subscription: state=present username="{{ rhn_user_name }}" password="{{ rhn_password }}" autosubscribe=false
+    redhat_subscription: state=present activationkey=xxx-poc org=xxxx autosubscribe=false
     register: task_result
     until: task_result | succeeded
     retries: 10
