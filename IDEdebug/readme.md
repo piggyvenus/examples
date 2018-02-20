@@ -1,7 +1,7 @@
 ## Starting OCP locally via
 #https://github.com/openshift/origin/releases
 oc cluster up --metric --logging
-
+oc cluster up --image=registry.access.redhat.com/openshift3/ose --version=v3.5 --metrics=true --logging=true
 
 ## Configure IDB to enable debug for JAVA
 1. Install Red Hat JBoss Developer Studio or Eclipse
