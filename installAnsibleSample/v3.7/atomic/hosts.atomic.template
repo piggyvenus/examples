@@ -1,0 +1,68 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+
+[OSEv3:vars]
+ansible_ssh_user=root
+debug_level=2
+
+# To deploy origin, change deployment_type to origin
+deployment_type=openshift-enterprise
+openshift_release=v3.7.23
+openshift_image_tag=v3.7.23
+openshift_pkg_version=-3.7.23
+openshift_clock_enabled=true
+containerized=true
+#value of tag add VM for key KubernetesCluster
+openshift_clusterid=atomicocp
+openshift_template_service_broker_namespaces=['openshift']
+#Enable service catalog
+openshift_enable_service_catalog=true
+# Enable template service broker (requires service catalog to be enabled, above)
+template_service_broker_install=true
+# Disabling for smaller instances used for Demo purposes. Use instances with minimum disk and memory sizes required by OpenShift
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability,docker_storage
+
+openshift_master_default_subdomain=<<your WILDCARD subdomain>>
+# AWS
+openshift_cloudprovider_kind=aws
+# Note: IAM profiles may be used instead of storing API credentials on disk.
+openshift_cloudprovider_aws_access_key=<<>>
+openshift_cloudprovider_aws_secret_key=<<>>
+
+#metrics- uncomment this session for post installation step
+#openshift_metrics_install_metrics=true
+#openshift_metrics_hawkular_hostname=hawkular-metrics.apps.sc.osecloud.com
+#openshift_metrics_cassandra_storage_type=dynamic
+#openshift_metrics_image_version=v3.7.23
+
+
+#logging - uncomment this session for post installation step
+#openshift_logging_install_logging=true
+#openshift_logging_namespace=logging
+#openshift_logging_storage_kind=dynamic
+#openshift_logging_image_version=v3.7.23
+#openshift_logging_es_pvc_storage_class_name=gp2
+#openshift_logging_es_pvc_size=20Gi
+#openshift_logging_es_cluster_size=1
+#openshift_logging_es_memory_limit=512Mi
+#openshift_logging_storage_labels={'storage': 'logging'}
+
+
+# Allow all auth
+openshift_master_identity_providers=[{'name': 'allow_all', 'login': 'true', 'challenge': 'true', 'kind': 'AllowAllPasswordIdentityProvider'}]
+
+# host group for masters
+[masters]
+ip-x-x-x-1.us-west-2.compute.internal
+
+[etcd]
+ip-x-x-x-1.us-west-2.compute.internal
+
+# host group for nodes, includes region info
+[nodes]
+ip-x-x-x-1.us-west-2.compute.internal openshift_clusterid=atomicocp openshift_ip=<x-x-x-1> openshift_public_ip=<master-public-ip> openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_scheduleable=true openshift_public_hostname=<master-public-hostname> containerized=true
+ip-x-x-x-2.us-west-2.compute.internal openshift_clusterid=atomicocp openshift_ip=<x-x-x-2> openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
+ip-x-x-x-3.us-west-2.compute.internal openshift_clusterid=atomicocp openshift_ip=<x-x-x-3> openshift_node_labels="{'region': 'primary', 'zone': 'east'}" containerized=true
