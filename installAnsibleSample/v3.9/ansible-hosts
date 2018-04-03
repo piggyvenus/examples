@@ -1,0 +1,140 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+nfs
+glusterfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# To deploy origin, change deployment_type to origin
+deployment_type=openshift-enterprise
+
+openshift_clock_enabled=true
+# Disabling for smaller instances used for Demo purposes. Use instances with minimum disk and memory sizes required by OpenShift
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability,docker_storage
+openshift_template_service_broker_namespaces=['openshift']
+#Enable service catalog
+openshift_enable_service_catalog=true
+## Enable template service broker (requires service catalog to be enabled, above)
+template_service_broker_install=true
+ansible_service_broker_local_registry_whitelist=['.*-apb$']
+
+openshift_master_default_subdomain=apps.tjxworkshop.openshift.online
+openshift_hosted_router_selector='region=infra'
+openshift_hosted_registry_selector='region=infra'
+openshift_install_examples=true
+openshift_docker_insecure_registries=172.30.0.0/16
+openshift_hosted_registry_storage_nfs_directory=/exports
+
+#cloudforms
+openshift_management_install_management=true
+openshift_management_install_beta=true
+openshift_management_app_template=cfme-template
+openshift_management_project=openshift-management
+openshift_management_storage_class=preconfigured
+
+
+
+# Enable cluster metrics
+openshift_metrics_install_metrics=true
+openshift_metrics_cassandra_storage_type=dynamic
+openshift_metrics_hawkular_hostname=hawkular-metrics.apps.tjxworkshop.openshift.online
+openshift_metrics_image_version=v3.9.14
+openshift_metrics_hawkular_nodeselector={'region': 'infra'}
+openshift_metrics_cassandra_nodeselector={'region': 'infra'}
+openshift_metrics_heapster_nodeselector={'region': 'infra'}
+
+
+# Logging
+openshift_logging_install_logging=true
+openshift_logging_storage_kind=nfs
+openshift_logging_storage_access_modes=['ReadWriteOnce']
+openshift_logging_storage_nfs_directory=/exports
+openshift_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_logging_storage_volume_name=logging-es
+openshift_logging_storage_volume_size=30Gi
+openshift_logging_storage_labels={'storage': 'logging'}
+openshift_logging_es_cluster_size=1
+openshift_logging_es_memory_limit=2Gi
+
+
+# Registry
+openshift_hosted_manage_router=true
+openshift_hosted_manage_registry=true
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=30Gi
+
+
+## Currently prometheus deployment is disabled by default, enable it by setting this
+openshift_prometheus_namespace=openshift-metrics
+openshift_hosted_prometheus_deploy=true
+openshift_prometheus_storage_kind=none
+#openshift_prometheus_storage_access_modes=['ReadWriteOnce']
+#openshift_prometheus_storage_nfs_directory=/exports
+##openshift_prometheus_storage_nfs_options='*(rw,root_squash)'
+#openshift_prometheus_storage_volume_name=prometheus
+#openshift_prometheus_storage_volume_size=10Gi
+#openshift_prometheus_storage_labels={'storage': 'prometheus'}
+#openshift_prometheus_storage_type='pvc'
+#openshift_prometheus_storage_class='emptydir'
+## For prometheus-alertmanager
+openshift_prometheus_alertmanager_storage_kind=none
+#openshift_prometheus_alertmanager_storage_access_modes=['ReadWriteOnce']
+#openshift_prometheus_alertmanager_storage_nfs_directory=/exports
+#openshift_prometheus_alertmanager_storage_volume_name=prometheus-alertmanager
+#openshift_prometheus_alertmanager_storage_volume_size=10Gi
+#openshift_prometheus_alertmanager_storage_labels={'storage': 'prometheus-alertmanager'}
+#openshift_prometheus_alertmanager_storage_type='pvc'
+#openshift_prometheus_alertmanager_storage_class='emptydir'
+## For prometheus-alertbuffer
+openshift_prometheus_alertbuffer_storage_kind=none
+#openshift_prometheus_alertbuffer_storage_access_modes=['ReadWriteOnce']
+#openshift_prometheus_alertbuffer_storage_nfs_directory=/exports
+#openshift_prometheus_alertbuffer_storage_nfs_options='*(rw,root_squash)'
+#openshift_prometheus_alertbuffer_storage_volume_name=prometheus-alertbuffer
+#openshift_prometheus_alertbuffer_storage_volume_size=10Gi
+#openshift_prometheus_alertbuffer_storage_labels={'storage': 'prometheus-alertbuffer'}
+#openshift_prometheus_alertbuffer_storage_type='pvc'
+#openshift_prometheus_alertbuffer_storage_class='emptydir'
+
+# enable htpasswd authentication
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
+
+#glusterfs
+openshift_storage_glusterfs_namespace=glusterfs
+openshift_storage_glusterfs_name=storage
+openshift_storage_glusterfs_heketi_wipe=true
+openshift_storage_glusterfs_storageclass_default=true
+# This is by default 100G...should be set to something lower for POCs
+openshift_storage_glusterfs_block_host_vol_size=30
+
+# host group for masters
+[masters]
+10.0.0.4
+
+[nfs]
+10.0.0.4
+
+[etcd]
+10.0.0.4
+
+# host group for nodes, includes region info
+[nodes]
+10.0.0.4 openshift_ip=10.0.0.4 openshift_hostname=ocpmaster openshift_public_ip=52.226.133.44 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"  openshift_scheduleable=true openshift_public_hostname=ocpmaster.tjxworkshop.openshift.online
+10.0.0.5 openshift_ip=10.0.0.5 openshift_hostname=ocpnode1 openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+10.0.0.6 openshift_ip=10.0.0.6 openshift_hostname=ocpnode2 openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+10.0.0.7 openshift_ip=10.0.0.7 openshift_hostname=ocpnode3 openshift_node_labels="{'region': 'primary', 'zone': 'south'}"
+
+[glusterfs]
+10.0.0.5 glusterfs_ip=10.0.0.5 glusterfs_zone=1 glusterfs_devices='[ "/dev/sdd" ]'
+10.0.0.6 glusterfs_ip=10.0.0.6 glusterfs_zone=2 glusterfs_devices='[ "/dev/sdd" ]'
+10.0.0.7 glusterfs_ip=10.0.0.7 glusterfs_zone=3 glusterfs_devices='[ "/dev/sdd" ]'
