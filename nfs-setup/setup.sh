@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "setting volume for internal registry"
 mkdir -p /exports/registry
-chown nfsnobody:nfsnobody /var/export/registryVol
+chown nfsnobody:nfsnobody /export/registryVol
 chmod 777 /exports/registry
 cat <<EOF > /etc/exports
 /export/registry *(rw,root_squash)
