@@ -58,6 +58,9 @@
 
   - name: Docker Storage Setup
     command: docker-storage-setup
-
+  
+  - name: Start Docker
+    command: systemctl enable docker
+    
   - name: Start Docker
     command: systemctl start docker
