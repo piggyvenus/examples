@@ -1,0 +1,121 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+glusterfs
+new_nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+#openshift_release=v3.9.25
+#openshift_image_tag=v3.9.25
+#openshift_pkg_version=-3.9.25
+
+# To deploy origin, change deployment_type to origin
+deployment_type=openshift-enterprise
+os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+openshift_clock_enabled=true
+
+# AWS
+openshift_cloudprovider_kind=aws
+# Note: IAM profiles may be used instead of storing API credentials on disk.
+openshift_cloudprovider_aws_access_key=<<>>
+openshift_cloudprovider_aws_secret_key=<<>>
+openshift_clusterid=sc-cluster-w1
+
+# Disabling for smaller instances used for Demo purposes. Use instances with minimum disk and memory sizes required by OpenShift
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability,docker_storage
+openshift_template_service_broker_namespaces=['openshift']
+#Enable service catalog
+openshift_enable_service_catalog=true
+## Enable template service broker (requires service catalog to be enabled, above)
+template_service_broker_install=true
+# Ansible Service Broker
+openshift_hosted_etcd_storage_kind=dynamic
+openshift_hosted_etcd_storage_volume_name=etcd-vol2
+#openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
+openshift_hosted_etcd_storage_volume_size=10Gi
+ansible_service_broker_local_registry_whitelist=['.*-apb$']
+
+openshift_master_default_subdomain=apps.workshop.sc.osecloud.com
+openshift_hosted_router_selector='region=infra'
+openshift_hosted_registry_selector='region=infra'
+osm_cluster_network_cidr=10.1.0.0/16
+osm_host_subnet_length=8
+openshift_portal_net=172.30.0.0/16
+osm_default_node_selector="region=primary"
+openshift_docker_insecure_registries=172.30.0.0/16
+#openshift_hosted_registry_storage_nfs_directory=/exports
+
+# Uncomment when setting up logging/metrics/prometheus
+#openshift_master_dynamic_provisioning_enabled=true
+#dynamic_volumes_check=False
+
+# Metrics
+openshift_metrics_install_metrics=true
+openshift_metrics_cassandra_storage_type=dynamic
+openshift_metrics_cassandra_pvc_size=24Gi
+openshift_metrics_cassanda_pvc_storage_class_name=glusterfs-storage-block
+openshift_metrics_hawkular_nodeselector={'region':'infra'}
+openshift_metrics_heapster_nodeselector={'region':'infra'}
+openshift_metrics_cassandra_nodeselector={'region':'infra'}
+
+# Logging
+openshift_logging_install_logging=true
+openshift_logging_es_pvc_dynamic=true
+openshift_logging_es_pvc_size=24Gi
+openshift_logging_es_pvc_storage_class_name=glusterfs-storage-block
+openshift_logging_curator_nodeselector={'region':'infra'}
+openshift_logging_es_nodeselector={'region':'infra'}
+openshift_logging_kibana_nodeselector={'region':'infra'}
+openshift_logging_es_memory_limit=4G
+
+# Registry
+openshift_hosted_manage_router=true
+openshift_hosted_manage_registry=true
+openshift_hosted_registry_storage_kind=glusterfs
+openshift_hosted_registry_storage_volume_size=25Gi
+
+
+# enable htpasswd authentication
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
+
+# CNS Storage
+openshift_storage_glusterfs_namespace=glusterfs
+openshift_storage_glusterfs_name=storage
+openshift_storage_glusterfs_heketi_wipe=true
+openshift_storage_glusterfs_wipe=true
+openshift_storage_glusterfs_storageclass_default=true
+openshift_storage_glusterfs_block_storageclass=true
+openshift_storage_glusterfs_block_host_vol_size=50
+
+openshift_master_api_port=443
+openshift_master_console_port=443
+
+# host group for masters
+[masters]
+ip-172-31-26-151.us-west-1.compute.internal
+
+[etcd]
+ip-172-31-26-151.us-west-1.compute.internal
+
+# host group for nodes, includes region info
+[nodes]
+ip-172-31-26-151.us-west-1.compute.internal openshift_ip=172.31.26.151 openshift_public_ip=13.57.146.31 openshift_node_labels="{'region': 'master', 'zone': 'default'}"  openshift_scheduleable=true openshift_public_hostname=ocpmaster.workshop.sc.osecloud.com
+ip-172-31-30-55.us-west-1.compute.internal openshift_ip=172.31.30.55 openshift_node_labels="{'region': 'infra', 'zone': 'west'}"
+ip-172-31-27-106.us-west-1.compute.internal openshift_ip=172.31.27.106 openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+ip-172-31-22-41.us-west-1.compute.internal openshift_ip=172.31.22.41 openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+ip-172-31-21-120.us-west-1.compute.internal openshift_ip=172.31.21.120 openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+ip-172-31-19-233.us-west-1.compute.internal openshift_ip=172.31.19.233 openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+
+[new_nodes]
+
+[glusterfs]
+ip-172-31-30-55.us-west-1.compute.internal glusterfs_ip=172.31.30.55 glusterfs_devices='[ "/dev/xvdc" ]'
+ip-172-31-27-106.us-west-1.compute.internal glusterfs_ip=172.31.27.106 glusterfs_devices='[ "/dev/xvdc" ]'
+ip-172-31-22-41.us-west-1.compute.internal glusterfs_ip=172.31.22.41 glusterfs_devices='[ "/dev/xvdc" ]'
+ip-172-31-21-120.us-west-1.compute.internal glusterfs_ip=172.31.21.120 glusterfs_devices='[ "/dev/xvdc" ]'
