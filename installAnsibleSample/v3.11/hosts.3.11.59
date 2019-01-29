@@ -20,9 +20,9 @@ glusterfs
 openshift_deployment_type=openshift-enterprise
 openshift_disable_check="disk_availability,memory_availability,docker_image_availability"
 
-openshift_image_tag=v3.11.59
-openshift_pkg_version=-3.11.59
-openshift_release=3.11.59
+#openshift_image_tag=v3.11.59
+#openshift_pkg_version=-3.11.59
+#openshift_release=3.11.59
 
 # Configure logrotate scripts
 # See: https://github.com/nickhammond/ansible-logrotate
@@ -41,12 +41,12 @@ ansible_ssh_user=root
 ###########################################################################
 # {{ lookup('env','HOME') }}
 oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
-oreg_auth_user=
+oreg_auth_user=shanna_chan
 oreg_auth_password="{{ lookup('env','RHNPWD') }}"
 
 
 # For Operator Framework Images
-openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'xxx','password':'xxxxx','test_image':'mongodb/enterprise-operator:0.3.2'}]
+openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'shanna_chan','password':'Bubble@20260','test_image':'mongodb/enterprise-operator:0.3.2'}]
 
 openshift_examples_modify_imagestreams=true
 
@@ -66,14 +66,14 @@ osm_use_cockpit=false
 ### OpenShift Master Vars
 ###########################################################################
 
-#openshift_master_api_port=443
-#openshift_master_console_port=443
-
+openshift_master_public_api_url=https://ocpmaster.sc.ocpdemo.online:8443
+openshift_master_public_console_url=https://ocpmaster.sc.ocpdemo.online:8443/console
+openshift_master_api_port=8443
+openshift_master_console_port=8443
 #openshift_master_cluster_method=native
-openshift_master_cluster_hostname=10.0.0.50
+openshift_master_cluster_hostname=ocpmaster.sc.ocpdemo.online
 openshift_master_cluster_public_hostname=ocpmaster.sc.ocpdemo.online
 openshift_master_default_subdomain=ocp.sc.ocpdemo.online
-#openshift_master_overwrite_named_certificates=True
 
 
 openshift_clock_enabled=True
@@ -87,23 +87,16 @@ openshift_portal_net=152.30.0.0/16
 osm_host_subnet_length=8
 openshift_docker_insecure_registries=152.30.0.0/16
 
-os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
-#os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
+#os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
 
 ###########################################################################
 ### OpenShift Authentication Vars
 ###########################################################################
 
 
-#openshift_master_htpasswd_file=/root/htpasswd.openshift
-#openshift_master_identity_providers=[{"challenge": "true", "login": "true", "name": "htpasswd_auth", "kind": "HTPasswdPasswordIdentityProvider"}]
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 openshift_master_htpasswd_users={'developer': '$apr1$q2fVVf46$85HP/4JHGYeFBKAKPBblo0'}
-###########################################################################
-### OpenShift admission plugin config
-###########################################################################
-
-#openshift_master_admission_plugin_config={"ValidatingAdmissionWebhook": {"configuration": {"kind": "WebhookAdmission", "kubeConfigFile": "/dev/null", "apiVersion": "apiserver.config.k8s.io/v1alpha1"}}, "MutatingAdmissionWebhook": {"configuration": {"kind": "WebhookAdmission", "kubeConfigFile": "/dev/null", "apiVersion": "apiserver.config.k8s.io/v1alpha1"}}}
 
 ###########################################################################
 ### OpenShift Metrics and Logging Vars
@@ -204,26 +197,25 @@ openshift_storage_glusterfs_block_storageclass=true
 openshift_storage_glusterfs_block_host_vol_size=50
 
 [masters]
-10.0.0.50 openshift_public_hostname=ocpmaster.sc.ocpdemo.online
+ip-10-0-0-90.us-west-2.compute.internal openshift_public_hostname=ocpmaster.sc.ocpdemo.online
 
 [etcd]
-10.0.0.50
+ip-10-0-0-90.us-west-2.compute.internal
 
 [nodes]
 ## These are the masters
-10.0.0.50 openshift_public_hostname=ocpmaster.sc.ocpdemo.online openshift_node_group_name='node-config-master' openshift_schedulable=true
+ip-10-0-0-90.us-west-2.compute.internal openshift_public_hostname=ocpmaster.sc.ocpdemo.online openshift_node_group_name='node-config-master' openshift_schedulable=true
 
 ## These are regular nodes
-10.0.0.96 openshift_public_hostname=ocpinfra.sc.ocpdemo.online openshift_node_group_name='node-config-infra' openshift_schedulable=true
-10.0.0.81 openshift_public_hostname=ocpapp1.sc.ocpdemo.online openshift_node_group_name='node-config-compute' openshift_schedulable=true
-10.0.0.45 openshift_public_hostname=ocpapp2.sc.ocpdemo.online openshift_node_group_name='node-config-compute' openshift_schedulable=true
-10.0.0.85 openshift_public_hostname=ocpapp3.sc.ocpdemo.online openshift_node_group_name='node-config-compute' openshift_schedulable=true
+ip-10-0-0-166.us-west-2.compute.internal openshift_public_hostname=ocpinfra.sc.ocpdemo.online openshift_node_group_name='node-config-infra' openshift_schedulable=true
+ip-10-0-0-94.us-west-2.compute.internal openshift_node_group_name='node-config-compute' openshift_schedulable=true
+ip-10-0-0-209.us-west-2.compute.internal openshift_node_group_name='node-config-compute' openshift_schedulable=true
+ip-10-0-0-72.us-west-2.compute.internal openshift_node_group_name='node-config-compute' openshift_schedulable=true
 
 [nfs]
-10.0.0.96
-
+ip-10-0-0-166.us-west-2.compute.internal
 [glusterfs]
 # "standalone" glusterfs nodes STILL need to be in the "[nodes]" section
-10.0.0.81 glusterfs_ip=10.0.0.81 glusterfs_zone=1 glusterfs_devices='[ "/dev/xvdc" ]'
-10.0.0.45 glusterfs_ip=10.0.0.45 glusterfs_zone=2 glusterfs_devices='[ "/dev/xvdc" ]'
-10.0.0.85 glusterfs_ip=10.0.0.85 glusterfs_zone=3 glusterfs_devices='[ "/dev/xvdc" ]'
+ip-10-0-0-94.us-west-2.compute.internal glusterfs_ip=10.0.0.94 glusterfs_zone=1 glusterfs_devices='[ "/dev/xvdc" ]'
+ip-10-0-0-209.us-west-2.compute.internal glusterfs_ip=10.0.0.209 glusterfs_zone=2 glusterfs_devices='[ "/dev/xvdc" ]'
+ip-10-0-0-72.us-west-2.compute.internal glusterfs_ip=10.0.0.72 glusterfs_zone=3 glusterfs_devices='[ "/dev/xvdc" ]'
