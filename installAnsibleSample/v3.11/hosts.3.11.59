@@ -41,12 +41,12 @@ ansible_ssh_user=root
 ###########################################################################
 # {{ lookup('env','HOME') }}
 oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
-oreg_auth_user=shanna_chan
+oreg_auth_user=
 oreg_auth_password="{{ lookup('env','RHNPWD') }}"
 
 
 # For Operator Framework Images
-openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'shanna_chan','password':'Bubble@20260','test_image':'mongodb/enterprise-operator:0.3.2'}]
+openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'xxx','password':'xxxx','test_image':'mongodb/enterprise-operator:0.3.2'}]
 
 openshift_examples_modify_imagestreams=true
 
