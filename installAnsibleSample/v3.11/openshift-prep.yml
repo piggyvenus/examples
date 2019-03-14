@@ -38,7 +38,7 @@
     with_items: '{{rhel_pool_id}}'
 
   - name: Enable only required repositories with Subscription Manager
-    command: subscription-manager repos --disable="*" --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.11-rpms" --enable="rhel-7-server-ansible-2.6-rpms"
+    command: subscription-manager repos --disable="*" --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.11-rpms" --enable="rhel-7-server-ansible-2.6-rpms" enable+" rh-gluster-3-client-for-rhel-7-server-rpms"
 
   - name: Run yum update
     yum: name=* state=latest
