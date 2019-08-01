@@ -70,7 +70,7 @@ $aws s3 mb s3://migrepo
 make_bucket: migrepo
 ```
 
-Delete S3 bucket
+(in case you need it) Delete S3 bucket
 ```
 $ aws s3 rb s3://bucket-name --force
 ```
