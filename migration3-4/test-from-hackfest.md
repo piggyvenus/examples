@@ -1,4 +1,4 @@
-## testing migration steps
+## Testing migration steps
 
 On the 3.x cluster:
 
@@ -104,3 +104,9 @@ Switch to OCP 4.x
 
 
 Migration Tutorial is here: https://github.com/fusor/mig-agnosticd/blob/master/demos/2019_07_Hackfest/Migrate.md
+
+## References:
+
+- https://github.com/fusor/mig-operator
+- https://github.com/fusor/mig-demo-apps
+- https://github.com/fusor/mig-agnosticd
