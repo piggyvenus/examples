@@ -40,8 +40,9 @@ oc create -f https://raw.githubusercontent.com/fusor/mig-operator/master/operato
 oc create -f https://raw.githubusercontent.com/fusor/mig-operator/master/controller.yml
 
 ```
+Back onto OCP 3.x cluster, get the hostname from the migration route from instruction per link here.
 https://github.com/fusor/mig-operator#manual-cors-cross-origin-resource-sharing-configuration
-Back onto OCP 3.x cluster, get the hostname from the migration route.
+
 
 ```
 $ oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'
