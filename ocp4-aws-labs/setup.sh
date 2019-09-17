@@ -42,5 +42,5 @@ region = $REGION
 EOF
 
 aws sts get-caller-identity
-echo "run `openshift-install create cluster` with you are already."
+echo "run \"openshift-install create cluster\" with you are already."
 echo "please go to cloud.redhat.com if you need more details."
