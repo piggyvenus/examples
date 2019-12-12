@@ -20,6 +20,8 @@ wget https://raw.githubusercontent.com/piggyvenus/examples/master/ocp4-aws-labs/
 ./setup.sh <version> <AWSKEY> <AWSSECRETKEY>
 ```
 
+> NOTE: for a list of versions use https://mirror.openshift.com/pub/openshift-v4/clients/ocp/  
+
 9. After setup.sh, you will be ready to run `openshift-install create cluster`.
 10. You will select the region
 11. Enter cluster id. Please use cluster-{GUID} as cluster id. Note that GUID is provided in your email.
