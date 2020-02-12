@@ -17,9 +17,9 @@ sudo -i
 8. Download the setup.sh script and run it as shown below
 ```
 wget https://raw.githubusercontent.com/piggyvenus/examples/master/ocp4-aws-labs/setup.sh
-./setup.sh
 
 chmod +x ./setup.sh
+
 ./setup.sh  <version> <AWSKEY> <AWSSECRETKEY>
 
 ```
